@@ -38,7 +38,39 @@ const fragmentShader = `
     }
 `
 
+let paragraphs = [...document.querySelectorAll('.hero-container p')];
+let spans = [];
+
+paragraphs.forEach(paragraph => {
+    let htmlString = '';
+    let pArray = paragraph.textContent.split('');
+    for (let i = 0; i < pArray.length; i++){
+        htmlString += `<span>${pArray[i]}</span>`;
+    }
+    paragraph.innerHTML = htmlString;
+})
+
+spans = [...document.querySelectorAll('.hero-container span')];
+
+function revealSpans() {
+    for (let i = 0; i < spans.length; i++) {
+        let { left, top } = spans[i].getBoundingClientRect();
+        top = top - (window.innerHeight * 0.35);
+        const calc = ((top * 0.1) + (left * 0.001))
+        let opacityValue = 1 - calc < 0.1 ? 0.1 : 1 - calc.toFixed(3);
+        opacityValue = opacityValue > 1 ? 1 : opacityValue.toFixed(3);
+        spans[i].style.opacity = opacityValue
+    }
+}
+
+const projects = [];
+
 let scrollable = document.querySelector('.scrollable');
+
+const wraps = [...document.querySelectorAll('.wrap')];
+const menuTog = document.querySelector('.menu-tog');
+const menu = document.querySelector('.menu');
+const menuWraps = [...document.querySelectorAll('.menu-wrap')];
 
 let current = 0;
 let target = 0;
@@ -54,6 +86,60 @@ function lerp(start, end, t){
 function init(){
     document.body.style.height = `${scrollable.getBoundingClientRect().height}px`;
 }
+
+function displayWraps(){
+    wraps.forEach((wrap, idx) => {
+        setTimeout(() => {
+            wrap.classList.add('active');
+        }, (idx + 1) * 50)
+    })
+}
+
+function toggleMenu(){
+    if(menu.classList.contains('active')){
+        menuTog.classList.remove('active');
+        toggleMenuWraps(false);
+        setTimeout(() => {
+            menu.classList.remove('active')
+        }, 300)
+        setTimeout(() => {
+            toggleWraps(true);
+        }, 300)
+    }else{
+        menuTog.classList.add('active');
+        toggleWraps(false);
+        setTimeout(() => {
+            menu.classList.add('active')
+        }, 300)
+        setTimeout(() => {
+            toggleMenuWraps(true);
+        }, 300)
+    }
+}
+
+function toggleWraps(active){
+    wraps.forEach(wrap => {
+        toggleWrap(wrap, active);
+    })
+}
+
+function toggleMenuWraps(active){
+    menuWraps.forEach(wrap => {
+        toggleWrap(wrap, active);
+    })
+}
+
+function toggleWrap(wrap, active){
+    setTimeout(() => {
+        if(active){
+            wrap.classList.add('active');
+        }else{
+            wrap.classList.remove('active');
+        }
+    })
+}
+
+target = 1;
 
 // translate the scrollable div using the lerp function for the smooth scrolling effect.
 function smoothScroll(){
@@ -85,7 +171,10 @@ class EffectCanvas{
     }
 
     setupCamera(){
+        revealSpans()
         window.addEventListener('resize', this.onWindowResize.bind(this), false);
+        menuTog.addEventListener('click', toggleMenu)
+        window.addEventListener('scroll', () => revealSpans())
     
         // Create new scene
         this.scene = new THREE.Scene();
@@ -188,6 +277,6 @@ class MeshItem{
         this.uniforms.uOffset.value.set(this.offset.x * 0.0, -(target- current) * 0.0003 )
     }
 }
-
+displayWraps()
 init()
 new EffectCanvas()

@@ -1,66 +1,224 @@
+:root {
+  --main-bg-color: #0f0f0f;
+}
+
 @font-face {
-    font-family: "Harmond";
-    src: url("/Harmond-ExtraBoldExpanded.otf") format("opentype");
+  font-family: "Harmond";
+  src: url("/Harmond-ExtraBoldExpanded.otf") format("opentype");
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Harmond;
+  text-decoration: none;
+  list-style: none;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+a {
+  color: #ffffff;
+}
+
+body,
+html {
+  overscroll-behavior: none;
+  background-color: var(--main-bg-color);
+  height: 100vh;
+  width: 100%;
+}
+
+main {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 0;
+}
+
+.scrollable {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  will-change: transform;
+}
+
+.content {
+  position: relative;
+  width: 100%;
+}
+
+.hero-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-direction: column;
+}
+
+.hero-container p {
+  width: 100%;
+  margin-bottom: 4rem;
+  font-size: clamp(20px, 5vw, 60px);
+  padding: 0 5%;
+  z-index: 10;
+  color: #ffffff;
+  mix-blend-mode: difference;
+}
+
+.hero-container span {
+  opacity: 0.1;
+}
+
+.image-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+h1 {
+  position: absolute;
+  left: 0;
+  top: 60%;
+  left: 45%;
+  z-index: 10;
+  color: #ffffff;
+  mix-blend-mode: difference;
+}
+h2 {
+  position: absolute;
+  left: 0;
+  top: 65%;
+  left: 45%;
+  z-index: 10;
+  color: #ffffff;
+  mix-blend-mode: difference;
+}
+
+img {
+  position: absolute;
+  height: 60%;
+  visibility: hidden;
+}
+
+canvas {
+  position: fixed;
+  z-index: -10;
+  top: 0;
+  left: 0;
+}
+.menu-tog {
+  position: fixed;
+  top: 3%;
+  right: 2%;
+  width: 25px;
+  height: 6px;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  justify-content: space-between;
+  z-index: 3;
+  mix-blend-mode: difference;
+}
+
+.menu-tog span {
+  position: relative;
+  width: 100%;
+  height: 2px;
+  background-color: #ffffff;
+  transition: 0.5s;
+  transform-origin: center;
+}
+
+.menu-tog.active span:nth-child(1) {
+  position: absolute;
+  transform: rotate(45deg);
+}
+
+.menu-tog.active span:nth-child(2) {
+  position: absolute;
+  transform: rotate(-45deg);
+}
+
+.menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: var(--main-bg-color);
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.5s;
+}
+
+.menu.active {
+  pointer-events: all;
+  opacity: 1;
+}
+
+
+.links {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  height: 100vh;
+}
+
+.links ul {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.menu-wrap {
+  position: relative;
+  overflow: hidden;
+}
+
+.menu-wrap a {
+  display: block;
+  font-size: 40px;
+  transform: translateY(100%);
+  transition: 0.5s;
+}
+
+.menu-wrap.active a {
+  transform: translateY(0);
+}
+
+.menu-wrap span {
+  font-size: 12px;
+}
+
+@media only screen and (max-width: 600px) {
+  h1 { 
+    left: 35%;
+    font-size: 28px;
   }
-  
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Harmond;
+  h2 {
+    left: 35%;
+    font-size: 20px;
+    top: 68%;
   }
-  
-  body,
-  html {
-    overscroll-behavior: none;
-    background-color: #000000;
-    height: 100vh;
-    width: 100%;
-  }
-  
-  main {
-    position: fixed;
-    width: 100%;
-    height: 100vh;
-  }
-  
-  .scrollable {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    will-change: transform;
-  }
-  
-  .image-container {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  h1 {
-    position: absolute;
-    left: 0;
-    top: 60%;
-    left: 55%;
-    z-index: 10;
-    color: #ffffff;
-    mix-blend-mode: difference;
-  }
-  
-  img {
-    position: absolute;
-    height: 60%;
-    visibility: hidden;
-  }
-  
-  canvas {
-    position: fixed;
-    z-index: -10;
-    top: 0;
-    left: 0;
-  }
-  
+}
