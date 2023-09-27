@@ -3,16 +3,17 @@
 }
 
 @font-face {
-  font-family: "Harmond";
-  src: url("/Harmond-ExtraBoldExpanded.otf") format("opentype");
+  font-family: "Barlow";
+  src: url("/Barlow-Regular.ttf") format("truetype");
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Harmond;
+  font-family: Barlow;
   text-decoration: none;
+  text-transform: uppercase;
   list-style: none;
 }
 
@@ -26,6 +27,17 @@ a {
 
 body,
 html {
+  /* body {
+    
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    font-family: "Barlow", sans-serif;
+    justify-content: center;
+    align-items: center;
+  } */
+  background: repeating-linear-gradient(0deg, #0E0D0E 25%, #0E0D0E 50%, #171819 50%, #171819 75%);
+  background-size: 10px 10px;
   overscroll-behavior: none;
   background-color: var(--main-bg-color);
   height: 100vh;
@@ -68,11 +80,19 @@ main {
 .hero-container p {
   width: 100%;
   margin-bottom: 4rem;
-  font-size: clamp(20px, 5vw, 60px);
+  font-size: clamp(20px, 5vw, 40px);
   padding: 0 5%;
   z-index: 10;
   color: #ffffff;
   mix-blend-mode: difference;
+}
+
+.logo {
+  margin: 1% 2%;
+}
+
+.title {
+  font-size: clamp(20px, 5vw, 60px) !important;
 }
 
 .hero-container span {
@@ -92,7 +112,7 @@ main {
 h1 {
   position: absolute;
   left: 0;
-  top: 60%;
+  top: 85%;
   left: 45%;
   z-index: 10;
   color: #ffffff;
@@ -101,7 +121,7 @@ h1 {
 h2 {
   position: absolute;
   left: 0;
-  top: 65%;
+  top: 90%;
   left: 45%;
   z-index: 10;
   color: #ffffff;
@@ -222,3 +242,4 @@ canvas {
     top: 68%;
   }
 }
+
