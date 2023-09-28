@@ -12,6 +12,8 @@
   padding: 0;
   box-sizing: border-box;
   font-family: Barlow;
+  font-weight: 200;
+  letter-spacing: -0.05em;
   text-decoration: none;
   text-transform: uppercase;
   list-style: none;
@@ -27,15 +29,6 @@ a {
 
 body,
 html {
-  /* body {
-    
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-    font-family: "Barlow", sans-serif;
-    justify-content: center;
-    align-items: center;
-  } */
   background: repeating-linear-gradient(0deg, #0E0D0E 25%, #0E0D0E 50%, #171819 50%, #171819 75%);
   background-size: 10px 10px;
   overscroll-behavior: none;
@@ -51,6 +44,15 @@ main {
   width: 100%;
   height: 100vh;
   z-index: 0;
+}
+
+.header {
+  position: fixed;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-items: distance-between;
+  padding: 0 5%;
 }
 
 .scrollable {
@@ -80,19 +82,11 @@ main {
 .hero-container p {
   width: 100%;
   margin-bottom: 4rem;
-  font-size: clamp(20px, 5vw, 40px);
+  font-size: clamp(20px, 5vw, 50px);
   padding: 0 5%;
   z-index: 10;
   color: #ffffff;
   mix-blend-mode: difference;
-}
-
-.logo {
-  margin: 1% 2%;
-}
-
-.title {
-  font-size: clamp(20px, 5vw, 60px) !important;
 }
 
 .hero-container span {
@@ -111,18 +105,28 @@ main {
 
 h1 {
   position: absolute;
-  left: 0;
-  top: 85%;
-  left: 45%;
+  top: 80%;
+  left: 60%;
+  font-weight: 700;
   z-index: 10;
   color: #ffffff;
   mix-blend-mode: difference;
 }
+
 h2 {
   position: absolute;
-  left: 0;
-  top: 90%;
-  left: 45%;
+  top: 85%;
+  left: 60%;
+  z-index: 10;
+  color: #ffffff;
+  mix-blend-mode: difference;
+}
+
+.image-container p {
+  position: absolute;
+  top: 18%;
+  left: 25%;
+  font-size: 1em;
   z-index: 10;
   color: #ffffff;
   mix-blend-mode: difference;
@@ -140,57 +144,6 @@ canvas {
   top: 0;
   left: 0;
 }
-.menu-tog {
-  position: fixed;
-  top: 3%;
-  right: 2%;
-  width: 25px;
-  height: 6px;
-  display: flex;
-  flex-direction: column;
-  cursor: pointer;
-  justify-content: space-between;
-  z-index: 3;
-  mix-blend-mode: difference;
-}
-
-.menu-tog span {
-  position: relative;
-  width: 100%;
-  height: 2px;
-  background-color: #ffffff;
-  transition: 0.5s;
-  transform-origin: center;
-}
-
-.menu-tog.active span:nth-child(1) {
-  position: absolute;
-  transform: rotate(45deg);
-}
-
-.menu-tog.active span:nth-child(2) {
-  position: absolute;
-  transform: rotate(-45deg);
-}
-
-.menu {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  background-color: var(--main-bg-color);
-  z-index: 1;
-  opacity: 0;
-  pointer-events: none;
-  transition: 0.5s;
-}
-
-.menu.active {
-  pointer-events: all;
-  opacity: 1;
-}
-
 
 .links {
   position: absolute;
@@ -239,7 +192,7 @@ canvas {
   h2 {
     left: 35%;
     font-size: 20px;
-    top: 68%;
+    /* top: 68%; */
   }
 }
 
