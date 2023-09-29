@@ -38,32 +38,6 @@ const fragmentShader = `
     }
 `
 
-// Reveal scroll effect
-let paragraphs = [...document.querySelectorAll('.hero-container p')];
-let spans = [];
-
-paragraphs.forEach(paragraph => {
-    let htmlString = '';
-    let pArray = paragraph.textContent.split('');
-    for (let i in pArray){
-        htmlString += `<span>${pArray[i]}</span>`;
-    }
-
-    paragraph.innerHTML = htmlString;
-})
-
-spans = [...document.querySelectorAll('.hero-container span')];
-
-function revealSpans() {
-    for (let span in spans) {
-        let { left, top } = spans[span].getBoundingClientRect();
-        top = top - (window.innerHeight * 0.32);
-        let opacityValue = 1 - ((top * 0.01) + (left * 0.001)) < 0.1 ?  0.1 : 1 - ((top * 0.01) + (left * 0.001)).toFixed(3);
-        opacityValue = opacityValue > 1 ? 1 : opacityValue.toFixed(3);
-        spans[span].style.opacity = opacityValue;
-    }
-}
-
 let scrollable = document.querySelector('.scrollable');
 
 let current = 0;
@@ -79,7 +53,6 @@ function lerp(start, end, t){
 // init function triggered on page load to set the body height to enable scrolling and EffectCanvas initialised
 function init(){
     document.body.style.height = `${scrollable.getBoundingClientRect().height}px`;
-    revealSpans()
 }
 
 // translate the scrollable div using the lerp function for the smooth scrolling effect.
@@ -113,7 +86,6 @@ class EffectCanvas{
 
     setupCamera(){
         window.addEventListener('resize', this.onWindowResize.bind(this), false);
-        window.addEventListener('scroll', () => revealSpans())
     
         // Create new scene
         this.scene = new THREE.Scene();
