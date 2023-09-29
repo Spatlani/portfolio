@@ -57,7 +57,7 @@ spans = [...document.querySelectorAll('.hero-container span')];
 function revealSpans() {
     for (let span in spans) {
         let { left, top } = spans[span].getBoundingClientRect();
-        top = top - (window.innerHeight * 0.5);
+        top = top - (window.innerHeight * 0.32);
         let opacityValue = 1 - ((top * 0.01) + (left * 0.001)) < 0.1 ?  0.1 : 1 - ((top * 0.01) + (left * 0.001)).toFixed(3);
         opacityValue = opacityValue > 1 ? 1 : opacityValue.toFixed(3);
         spans[span].style.opacity = opacityValue;
@@ -176,7 +176,7 @@ class MeshItem{
     }
 
     createMesh(){
-        this.geometry = new THREE.PlaneBufferGeometry(1,1,100,100);
+        this.geometry = new THREE.PlaneGeometry(1,1,100,100);
         this.imageTexture = new THREE.TextureLoader().load(this.element.src);
         this.uniforms = {
             uTexture: {
