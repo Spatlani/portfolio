@@ -45,7 +45,6 @@ let target = 0;
 let ease = 0.075;
 
 // Linear inetepolation used for smooth scrolling and image offset uniform adjustment
-
 function lerp(start, end, t){
     return start * (1 - t ) + end * t;
 }
@@ -61,6 +60,7 @@ function smoothScroll(){
     current = lerp(current, target, ease);
     scrollable.style.transform = `translate3d(0,${-current}px, 0)`;
 }
+  
 
 class EffectCanvas{
     constructor(){
@@ -91,7 +91,6 @@ class EffectCanvas{
         this.scene = new THREE.Scene();
     
         // Initialize perspective camera
-    
         let perspective = 1000;
         const fov = (180 * (2 * Math.atan(window.innerHeight / 2 / perspective))) / Math.PI; // see fov image for a picture breakdown of this fov setting.
         this.camera = new THREE.PerspectiveCamera(fov, this.viewport.aspectRatio, 1, 1000)
