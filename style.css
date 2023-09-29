@@ -144,7 +144,7 @@ canvas {
   color: #ffffff;
   position: absolute;
   text-decoration: none;
-  bottom: 5%;
+  bottom: 10%;
   display: flex;
   justify-content: space-around;
   left: 5%;
@@ -159,7 +159,7 @@ canvas {
   width: 0;
   height: 30px;
   right: 5%;
-  top: 92%;
+  top: 88%;
   border: 1px solid #ffffff;
   position: absolute;
   animation: scroll 1.5s infinite;
@@ -204,8 +204,8 @@ canvas {
 
 @media only screen and (max-width: 600px) {
   .image-title {
-    top: 75%;
-    left: 40%;
+    top: 80%;
+    left: 35%;
   }
   h1 { 
     font-size: 24px;
@@ -215,7 +215,7 @@ canvas {
   }
   .image-description {
     left: 5%;
-    top: 22%
+    top: 17%
   }
 }
 
