@@ -69,15 +69,32 @@ function smoothScroll(){
     scrollable.style.transform = `translate3d(0,${-current}px, 0)`;
 }
 
+function showImages () {
+    let images = [...document.querySelectorAll('.section img')];
+    images.forEach(image => {
+        image.style.display = 'block';
+    })
+}
+
+function hideImages() {
+    let images = [...document.querySelectorAll('.section img')];
+    images.forEach(image => {
+        image.style.display = 'none';
+    })
+    setTimeout(() => showImages(), 300)
+}
+
 function scroll(){
   target = window.scrollY;
 
   if(target <= 0){
       target = (content.offsetHeight / 2) - 1;
       window.scrollTo(0, target);
-  }else if( target >= content.offsetHeight / 2){
+      hideImages()
+  } else if( target >= content.offsetHeight / 2){
       target = 1;
       window.scrollTo(0, target);
+      hideImages()
   }
 
   window.scrollTo(0, target)
