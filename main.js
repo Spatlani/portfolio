@@ -38,7 +38,15 @@ const fragmentShader = `
     }
 `
 
-let scrollable = document.querySelector('.scrollable');
+const scrollable = document.querySelector('.scrollable');
+const content = document.querySelector('.content');
+const sections = [...document.querySelectorAll('.section')];
+
+sections.forEach(section => {
+  let clonedSection = section.cloneNode(true);
+  clonedSection.classList.add('clone')
+  content.appendChild(clonedSection)
+})
 
 let current = 0;
 let target = 0;
@@ -60,7 +68,22 @@ function smoothScroll(){
     current = lerp(current, target, ease);
     scrollable.style.transform = `translate3d(0,${-current}px, 0)`;
 }
-  
+
+function scroll(){
+  target = window.scrollY;
+
+  if(target <= 0){
+      target = (content.offsetHeight / 2) - 1;
+      window.scrollTo(0, target);
+  }else if( target >= content.offsetHeight / 2){
+      target = 1;
+      window.scrollTo(0, target);
+  }
+
+  window.scrollTo(0, target)
+  scrollable.style.transform = `translateY(-${target}px)`;
+  requestAnimationFrame(scroll)
+}
 
 class EffectCanvas{
     constructor(){
@@ -86,7 +109,8 @@ class EffectCanvas{
 
     setupCamera(){
         window.addEventListener('resize', this.onWindowResize.bind(this), false);
-    
+        document.addEventListener('DOMContentLoaded', () => scroll())
+
         // Create new scene
         this.scene = new THREE.Scene();
     

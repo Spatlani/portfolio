@@ -102,11 +102,30 @@ main {
   justify-content: center;
 }
 
+.image-container img {
+  z-index: 10;
+  position: absolute;
+  height: 60%;
+  visibility: hidden;
+}
+
 .image-title {
   position: absolute;
   top: 80%;
   left: 60%;
   z-index: 10;
+}
+
+.work-header .bg-text {
+  font-size: 20em;
+  width: 200%;
+  font-weight: 900;
+  position: absolute;
+  z-index: -1;
+  top: -7%;
+  left: -3%;
+  color: #373737;
+  opacity: 0.1;
 }
 
 h1, h2 {
@@ -128,12 +147,6 @@ h2 {
   z-index: 10;
   color: #ffffff;
   mix-blend-mode: difference;
-}
-
-img {
-  position: absolute;
-  height: 60%;
-  visibility: hidden;
 }
 
 canvas {
@@ -207,8 +220,13 @@ canvas {
 }
 
 @media only screen and (max-width: 600px) {
+  .work-header .bg-text {
+    font-size: 5em;
+    top: 5%;
+    left: -3%;
+  }
   .header-bottom {
-    top: 80%;
+    top: 90%;
   }
   .image-title {
     top: 80%;
