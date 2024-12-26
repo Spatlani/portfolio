@@ -18,7 +18,7 @@ const vertexShader = `
         vec3 newPosition = deformationCurve(position, uv, uOffset);
         gl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0 );
     }
-`
+`;
 
 const fragmentShader = `
     uniform sampler2D uTexture;
@@ -27,207 +27,186 @@ const fragmentShader = `
     varying vec2 vUv;
     
     vec3 rgbShift(sampler2D textureImage, vec2 uv, vec2 offset) {
-        float r = texture2D(textureImage,uv + offset).r;
-        vec2 gb = texture2D(textureImage,uv).gb;
-        return vec3(r,gb);
+        float r = texture2D(textureImage, uv + offset).r;
+        vec2 gb = texture2D(textureImage, uv).gb;
+        return vec3(r, gb);
     }
     
     void main() {
-        vec3 color = rgbShift(uTexture,vUv,uOffset);
-        gl_FragColor = vec4(color,uAlpha);
+        vec3 color = rgbShift(uTexture, vUv, uOffset);
+        gl_FragColor = vec4(color, uAlpha);
     }
-`
+`;
 
 const scrollable = document.querySelector('.scrollable');
 const content = document.querySelector('.content');
 const sections = [...document.querySelectorAll('.section')];
 
+// Clone sections for infinite scrolling
 sections.forEach(section => {
-  let clonedSection = section.cloneNode(true);
-  clonedSection.classList.add('clone')
-  content.appendChild(clonedSection)
-})
+    const clonedSection = section.cloneNode(true);
+    clonedSection.classList.add('clone');
+    content.appendChild(clonedSection);
+});
 
 let current = 0;
 let target = 0;
 let ease = 0.075;
 
-// Linear inetepolation used for smooth scrolling and image offset uniform adjustment
-function lerp(start, end, t){
-    return start * (1 - t ) + end * t;
+// Linear interpolation for smooth transitions
+function lerp(start, end, t) {
+    return start * (1 - t) + end * t;
 }
 
-// init function triggered on page load to set the body height to enable scrolling and EffectCanvas initialised
-function init(){
+// Initialize content height for scrolling
+function init() {
     document.body.style.height = `${scrollable.getBoundingClientRect().height}px`;
 }
 
-// translate the scrollable div using the lerp function for the smooth scrolling effect.
-function smoothScroll(){
+// Smooth scrolling effect
+function smoothScroll() {
     target = window.scrollY;
     current = lerp(current, target, ease);
-    scrollable.style.transform = `translate3d(0,${-current}px, 0)`;
+    scrollable.style.transform = `translate3d(0, ${-current}px, 0)`;
 }
 
-function showImages () {
-    let images = [...document.querySelectorAll('.section img')];
-    images.forEach(image => {
-        image.style.display = 'block';
-    })
+// Infinite circular scrolling logic
+function scroll() {
+    target = window.scrollY;
+
+    const contentHeight = content.offsetHeight;
+    const halfHeight = contentHeight / 2;
+
+    // Handle boundaries for infinite scroll
+    if (target <= 0) {
+        target = halfHeight - 1;
+        current = target;
+        window.scrollTo(0, target);
+    } else if (target >= halfHeight) {
+        target = 1;
+        current = target;
+        window.scrollTo(0, target);
+    }
+
+    scrollable.style.transform = `translateY(-${target}px)`;
+    smoothScroll();
+    requestAnimationFrame(scroll);
 }
 
-function hideImages() {
-    let images = [...document.querySelectorAll('.section img')];
-    images.forEach(image => {
-        image.style.display = 'none';
-    })
-    setTimeout(() => showImages(), 300)
-}
-
-function scroll(){
-  target = window.scrollY;
-
-  if(target <= 0){
-      target = (content.offsetHeight / 2) - 1;
-      window.scrollTo(0, target);
-      hideImages()
-  } else if( target >= content.offsetHeight / 2){
-      target = 1;
-      window.scrollTo(0, target);
-      hideImages()
-  }
-
-  window.scrollTo(0, target)
-  scrollable.style.transform = `translateY(-${target}px)`;
-  requestAnimationFrame(scroll)
-}
-
-class EffectCanvas{
-    constructor(){
+class EffectCanvas {
+    constructor() {
         this.container = document.querySelector('main');
         this.images = [...document.querySelectorAll('img')];
-        this.meshItems = []; // Used to store all meshes we will be creating.
+        this.meshItems = [];
         this.setupCamera();
         this.createMeshItems();
-        this.render()
+        this.render();
     }
 
-    // Getter function used to get screen dimensions used for the camera and mesh materials
-    get viewport(){
-        let width = window.innerWidth;
-        let height = window.innerHeight;
-        let aspectRatio = width / height;
-        return {
-          width,
-          height,
-          aspectRatio
-        };
+    get viewport() {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        const aspectRatio = width / height;
+        return { width, height, aspectRatio };
     }
 
-    setupCamera(){
+    setupCamera() {
         window.addEventListener('resize', this.onWindowResize.bind(this), false);
-        document.addEventListener('DOMContentLoaded', () => scroll())
+        document.addEventListener('DOMContentLoaded', () => scroll());
 
-        // Create new scene
         this.scene = new THREE.Scene();
-    
-        // Initialize perspective camera
-        let perspective = 1000;
-        const fov = (180 * (2 * Math.atan(window.innerHeight / 2 / perspective))) / Math.PI; // see fov image for a picture breakdown of this fov setting.
-        this.camera = new THREE.PerspectiveCamera(fov, this.viewport.aspectRatio, 1, 1000)
-        this.camera.position.set(0, 0, perspective); // set the camera position on the z axis.
-        
-        // renderer
-        // this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+
+        const perspective = 1000;
+        const fov =
+            (180 * (2 * Math.atan(window.innerHeight / 2 / perspective))) /
+            Math.PI;
+        this.camera = new THREE.PerspectiveCamera(
+            fov,
+            this.viewport.aspectRatio,
+            1,
+            1000
+        );
+        this.camera.position.set(0, 0, perspective);
+
         this.renderer = new THREE.WebGL1Renderer({ antialias: true, alpha: true });
-        this.renderer.setSize(this.viewport.width, this.viewport.height); // uses the getter viewport function above to set size of canvas / renderer
-        this.renderer.setPixelRatio(window.devicePixelRatio); // Import to ensure image textures do not appear blurred.
-        this.container.appendChild(this.renderer.domElement); // append the canvas to the main element
+        this.renderer.setSize(this.viewport.width, this.viewport.height);
+        this.renderer.setPixelRatio(window.devicePixelRatio);
+        this.container.appendChild(this.renderer.domElement);
     }
 
-    onWindowResize(){
+    onWindowResize() {
         init();
-        this.camera.aspect = this.viewport.aspectRatio; // readjust the aspect ratio.
-        this.camera.updateProjectionMatrix(); // Used to recalulate projectin dimensions.
-        this.renderer.setSize(this.viewport.width, this.viewport.height); 
+        this.camera.aspect = this.viewport.aspectRatio;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(this.viewport.width, this.viewport.height);
     }
 
-    createMeshItems(){
-        // Loop thorugh all images and create new MeshItem instances. Push these instances to the meshItems array.
+    createMeshItems() {
         this.images.forEach(image => {
-            let meshItem = new MeshItem(image, this.scene);
+            const meshItem = new MeshItem(image, this.scene);
             this.meshItems.push(meshItem);
-        })
+        });
     }
 
-    // Animate smoothscroll and meshes. Repeatedly called using requestanimationdrame
-    render(){
+    render() {
         smoothScroll();
-        for(let i = 0; i < this.meshItems.length; i++){
-            this.meshItems[i].render();
-        }
-        this.renderer.render(this.scene, this.camera)
+        this.meshItems.forEach(meshItem => meshItem.render());
+        this.renderer.render(this.scene, this.camera);
         requestAnimationFrame(this.render.bind(this));
-    } 
+    }
 }
 
-class MeshItem{
-    // Pass in the scene as we will be adding meshes to this scene.
-    constructor(element, scene){
+class MeshItem {
+    constructor(element, scene) {
         this.element = element;
         this.scene = scene;
-        this.offset = new THREE.Vector2(0,0); // Positions of mesh on screen. Will be updated below.
-        this.sizes = new THREE.Vector2(0,0); //Size of mesh on screen. Will be updated below.
+        this.offset = new THREE.Vector2(0, 0);
+        this.sizes = new THREE.Vector2(0, 0);
         this.createMesh();
     }
 
-    getDimensions(){
-        const {width, height, top, left} = this.element.getBoundingClientRect();
+    getDimensions() {
+        const { width, height, top, left } = this.element.getBoundingClientRect();
         this.sizes.set(width, height);
-        this.offset.set(left - window.innerWidth / 2 + width / 2, -top + window.innerHeight / 2 - height / 2); 
+        this.offset.set(
+            left - window.innerWidth / 2 + width / 2,
+            -top + window.innerHeight / 2 - height / 2
+        );
     }
 
-    createMesh(){
-        this.geometry = new THREE.PlaneGeometry(1,1,100,100);
+    createMesh() {
+        this.geometry = new THREE.PlaneGeometry(1, 1, 100, 100);
         this.imageTexture = new THREE.TextureLoader().load(this.element.src);
         this.uniforms = {
-            uTexture: {
-                //texture data
-                value: this.imageTexture
-              },
-              uOffset: {
-                //distortion strength
-                value: new THREE.Vector2(0.0, 0.0)
-              },
-              uAlpha: {
-                //opacity
-                value: 1.
-              }
+            uTexture: { value: this.imageTexture },
+            uOffset: { value: new THREE.Vector2(0.0, 0.0) },
+            uAlpha: { value: 1.0 },
         };
         this.material = new THREE.ShaderMaterial({
             uniforms: this.uniforms,
-            vertexShader: vertexShader,
-            fragmentShader: fragmentShader,
+            vertexShader,
+            fragmentShader,
             transparent: true,
-            // wireframe: true,
-            side: THREE.DoubleSide
-        })
-        this.mesh = new THREE.Mesh( this.geometry, this.material );
-        this.getDimensions(); // set offsetand sizes for placement on the scene
+            side: THREE.DoubleSide,
+        });
+        this.mesh = new THREE.Mesh(this.geometry, this.material);
+        this.getDimensions();
         this.mesh.position.set(this.offset.x, this.offset.y, 0);
-		this.mesh.scale.set(this.sizes.x, this.sizes.y, 1);
-
-        this.scene.add( this.mesh );
+        this.mesh.scale.set(this.sizes.x, this.sizes.y, 1);
+        this.scene.add(this.mesh);
     }
 
-    render(){
-        // this function is repeatidly called for each instance in the aboce 
+    render() {
         this.getDimensions();
-        this.mesh.position.set(this.offset.x, this.offset.y, 0)
-		this.mesh.scale.set(this.sizes.x, this.sizes.y, 1)
-        this.uniforms.uOffset.value.set(this.offset.x * 0.0, -(target- current) * 0.0003 )
+        this.mesh.position.set(this.offset.x, this.offset.y, 0);
+        this.mesh.scale.set(this.sizes.x, this.sizes.y, 1);
+        this.uniforms.uOffset.value.set(
+            this.offset.x * 0.0,
+            -(target - current) * 0.0003
+        );
     }
 }
 
-init()
-new EffectCanvas()
+// Initialize everything
+init();
+new EffectCanvas();
