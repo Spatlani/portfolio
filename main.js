@@ -16,7 +16,7 @@ const vertexShader = `
     void main() {
         vUv = uv;
         vec3 newPosition = deformationCurve(position, uv, uOffset);
-        gl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0 );
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
     }
 `;
 
@@ -53,31 +53,25 @@ let current = 0;
 let target = 0;
 let ease = 0.075;
 
-// Linear interpolation for smooth transitions
 function lerp(start, end, t) {
     return start * (1 - t) + end * t;
 }
 
-// Initialize content height for scrolling
 function init() {
     document.body.style.height = `${scrollable.getBoundingClientRect().height}px`;
 }
 
-// Smooth scrolling effect
 function smoothScroll() {
     target = window.scrollY;
     current = lerp(current, target, ease);
     scrollable.style.transform = `translate3d(0, ${-current}px, 0)`;
 }
 
-// Infinite circular scrolling logic
 function scroll() {
     target = window.scrollY;
-
     const contentHeight = content.offsetHeight;
     const halfHeight = contentHeight / 2;
 
-    // Handle boundaries for infinite scroll
     if (target <= 0) {
         target = halfHeight - 1;
         current = target;
@@ -130,7 +124,7 @@ class EffectCanvas {
 
         this.renderer = new THREE.WebGL1Renderer({ antialias: true, alpha: true });
         this.renderer.setSize(this.viewport.width, this.viewport.height);
-        this.renderer.setPixelRatio(window.devicePixelRatio);
+        this.renderer.setPixelRatio(window.devicePixelRatio || 1);
         this.container.appendChild(this.renderer.domElement);
     }
 
@@ -139,6 +133,9 @@ class EffectCanvas {
         this.camera.aspect = this.viewport.aspectRatio;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(this.viewport.width, this.viewport.height);
+
+        // Recalculate mesh dimensions
+        this.meshItems.forEach(meshItem => meshItem.updateScale());
     }
 
     createMeshItems() {
@@ -167,10 +164,17 @@ class MeshItem {
 
     getDimensions() {
         const { width, height, top, left } = this.element.getBoundingClientRect();
-        this.sizes.set(width, height);
+        const scaleFactor = Math.min(1, window.innerWidth / 768); // Scale for mobile
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+
+        // Adjust sizes based on viewport and scale factor
+        this.sizes.set(width * scaleFactor, height * scaleFactor);
+
+        // Calculate offsets to center the images
         this.offset.set(
-            left - window.innerWidth / 2 + width / 2,
-            -top + window.innerHeight / 2 - height / 2
+            left + width / 2 - viewportWidth / 2,
+            -top - height / 2 + viewportHeight / 2
         );
     }
 
@@ -196,10 +200,14 @@ class MeshItem {
         this.scene.add(this.mesh);
     }
 
+    updateScale() {
+        this.getDimensions();
+        this.mesh.scale.set(this.sizes.x, this.sizes.y, 1);
+    }
+
     render() {
         this.getDimensions();
         this.mesh.position.set(this.offset.x, this.offset.y, 0);
-        this.mesh.scale.set(this.sizes.x, this.sizes.y, 1);
         this.uniforms.uOffset.value.set(
             this.offset.x * 0.0,
             -(target - current) * 0.0003
@@ -207,6 +215,5 @@ class MeshItem {
     }
 }
 
-// Initialize everything
 init();
 new EffectCanvas();

@@ -84,10 +84,11 @@ main {
 }
 
 .hero-container p {
-  font-size: clamp(20px, 5vw, 50px);
+  font-size: clamp(20px, 5vw, 45px);
   padding: 0 5%;
   z-index: 10;
   color: #ffffff;
+  text-align: justify;
   mix-blend-mode: difference;
 }
 
@@ -115,13 +116,19 @@ main {
   z-index: 10;
 }
 
+.work-header {
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+}
+
 .work-header .bg-text {
-  font-size: 20em;
-  width: 200%;
+  font-size: 18em;
+  width: 250%;
   font-weight: 900;
   position: absolute;
   z-index: -1;
-  top: -7%;
+  top: 6.8%;
   left: -3%;
   color: #373737;
   opacity: 0.1;
@@ -140,11 +147,18 @@ h2, h3 {
 
 .image-description {
   position: absolute;
-  top: 18%;
+  top: 16%;
   left: 25%;
   font-size: 1em;
   z-index: 10;
   color: #ffffff;
+  mix-blend-mode: difference;
+}
+
+.image-description span {
+  color: #b0b0b0;
+  font-size: 0.7em;
+  display: block;
   mix-blend-mode: difference;
 }
 
@@ -221,14 +235,14 @@ canvas {
 @media only screen and (max-width: 600px) {
   .work-header .bg-text {
     font-size: 5em;
-    top: 5%;
+    top: 8%;
     left: -3%;
   }
   .header-bottom {
     top: 90%;
   }
   .image-title {
-    top: 80%;
+    top: 65%;
     left: 35%;
   }
   h1 { 
@@ -239,7 +253,7 @@ canvas {
   }
   .image-description {
     left: 5%;
-    top: 17%
+    top: 28%
   }
 }
 
