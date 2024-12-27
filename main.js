@@ -217,3 +217,9 @@ class MeshItem {
 
 init();
 new EffectCanvas();
+
+document.addEventListener("DOMContentLoaded", () => {
+    setTimeout(() => {
+        document.body.classList.add("loaded");
+    }, 2000);
+});

@@ -2,6 +2,16 @@
   --main-bg-color: #0f0f0f;
 }
 
+::-moz-selection { /* Code for Firefox */
+  color: #000;
+  background: #fff;
+}
+
+::selection {
+  color: #000;
+  background: #fff;
+}
+
 @font-face {
   font-family: "Barlow";
   src: url("/Barlow-Regular.ttf") format("truetype");
@@ -11,7 +21,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Barlow;
+  font-family: Barlow, sans-serif;
   font-weight: 200;
   letter-spacing: -0.04em;
   text-decoration: none;
@@ -27,13 +37,78 @@ a, .logo {
   color: #ffffff;
 }
 
-body,
-html {
+body, html {
   background-size: 10px 10px;
   overscroll-behavior: none;
   background-color: var(--main-bg-color);
   height: 100vh;
   width: 100%;
+  transition: opacity 1s ease;
+}
+
+body:not(.loaded) .loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--main-bg-color); /* Loader background color */
+  z-index: 10;
+  opacity: 1; /* Fully visible */
+  transition: opacity 2s ease; /* Smooth fade-out */
+}
+
+body:not(.loaded) main {
+  opacity: 0;
+}
+
+body.loaded main {
+  opacity: 1;
+  transition: opacity 2s ease;
+}
+
+.loader .logo h2 {
+  font-size: 3em;
+  font-weight: bold;
+  color: transparent;
+  background: linear-gradient(#b0b0b0, #b0b0b0) left no-repeat rgba(255, 255, 255, 0.05);
+  background-size: 0% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: fillText 2s forwards ease-in-out;
+  white-space: nowrap; /* Prevent text wrapping */
+}
+
+@keyframes fillText {
+  to {
+    background-size: 100% 100%;
+  }
+}
+
+body:not(.loaded) .logo {
+  position: absolute; /* Start as absolute for initial centering */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 1s ease; /* Smooth transition */
+}
+
+body.loaded .logo {
+  position: fixed; /* Final position is fixed */
+  top: 1%;
+  left: -2%;
+  transform: scale(0.5) translate(0, 0); /* Reset translation while scaling down */
+  transition: all 1s ease;
+}
+
+@media only screen and (max-width: 600px) {
+  body.loaded .logo {
+    left: -10%; /* Adjust left position for mobile */
+  }
 }
 
 main {
@@ -50,7 +125,7 @@ main {
   height: 80px;
   display: flex;
   align-items: center;
-  justify-items: distance-between;
+  justify-content: space-between;
   padding: 0 5%;
 }
 
@@ -233,6 +308,9 @@ canvas {
 }
 
 @media only screen and (max-width: 600px) {
+  .loader .logo h2 {
+    font-size: 2em;
+  }
   .work-header .bg-text {
     font-size: 5em;
     top: 8%;
