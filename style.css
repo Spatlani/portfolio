@@ -100,14 +100,14 @@ body:not(.loaded) .logo {
 body.loaded .logo {
   position: fixed; /* Final position is fixed */
   top: 1%;
-  left: -2%;
-  transform: scale(0.5) translate(0, 0); /* Reset translation while scaling down */
+  left: -3%;
+  transform: scale(0.4) translate(0, 0); /* Reset translation while scaling down */
   transition: all 1s ease;
 }
 
 @media only screen and (max-width: 600px) {
   body.loaded .logo {
-    left: -10%; /* Adjust left position for mobile */
+    left: -15%; /* Adjust left position for mobile */
   }
 }
 
@@ -320,7 +320,7 @@ canvas {
     top: 90%;
   }
   .image-title {
-    top: 65%;
+    top: 68%;
     left: 35%;
   }
   h1 { 
@@ -331,7 +331,7 @@ canvas {
   }
   .image-description {
     left: 5%;
-    top: 28%
+    top: 27%
   }
 }
 
