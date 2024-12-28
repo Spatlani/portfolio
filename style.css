@@ -58,7 +58,7 @@ body:not(.loaded) .loader {
   background-color: var(--main-bg-color); /* Loader background color */
   z-index: 10;
   opacity: 1; /* Fully visible */
-  transition: opacity 2s ease; /* Smooth fade-out */
+  transition: opacity 1s ease; /* Smooth fade-out */
 }
 
 body:not(.loaded) main {
@@ -67,7 +67,7 @@ body:not(.loaded) main {
 
 body.loaded main {
   opacity: 1;
-  transition: opacity 2s ease;
+  transition: opacity 1s ease;
 }
 
 .loader .logo h2 {
@@ -79,7 +79,7 @@ body.loaded main {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: fillText 2s forwards ease-in-out;
+  animation: fillText 1s forwards ease-in-out;
   white-space: nowrap; /* Prevent text wrapping */
 }
 
@@ -163,7 +163,6 @@ main {
   padding: 0 5%;
   z-index: 10;
   color: #ffffff;
-  text-align: justify;
   mix-blend-mode: difference;
 }
 
@@ -182,6 +181,7 @@ main {
   position: absolute;
   height: 60%;
   visibility: hidden;
+  will-change: opacity, transform;
 }
 
 .image-title {
@@ -258,6 +258,10 @@ canvas {
   color: #ffffff;
   margin-right: 2rem;
   font-size: 0.8rem;
+}
+
+.text-grey {
+  color: #b0b0b0;
 }
 
 .arrow {

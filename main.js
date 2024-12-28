@@ -220,6 +220,7 @@ new EffectCanvas();
 
 document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
         document.body.classList.add("loaded");
-    }, 2000);
+    }, 1000);
 });
